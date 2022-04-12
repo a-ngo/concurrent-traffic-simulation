@@ -31,7 +31,7 @@ class MessageQueue {
 // the private member _currentPhase which can take „red“ or „green“ as its
 // value.
 
-enum TrafficLightPhase { red, green };
+enum class TrafficLightPhase { red, green };
 
 class TrafficLight : public TrafficObject {
  public:
@@ -49,6 +49,7 @@ class TrafficLight : public TrafficObject {
  private:
   // typical behaviour methods
   void cycleThroughPhases();
+  void toogleTrafficLight();
 
   // FP.4b : create a private member of type MessageQueue for messages of type
   // TrafficLightPhase and use it within the infinite loop to push each new
