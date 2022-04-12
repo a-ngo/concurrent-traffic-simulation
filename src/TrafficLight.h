@@ -31,7 +31,7 @@ class MessageQueue {
 // the private member _currentPhase which can take „red“ or „green“ as its
 // value.
 
-enum TrafficLightPhase { red, yellow, green };
+enum TrafficLightPhase { red, green };
 
 class TrafficLight : public TrafficObject {
  public:
