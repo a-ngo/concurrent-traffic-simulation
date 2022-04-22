@@ -16,10 +16,12 @@ T MessageQueue<T>::receive() {
   // TODO(a-ngo): check
   std::unique_lock<std::mutex> lock(_mutex);
 
-  lock.unlock();
-  _condition.wait();
+  _condition.wait(lock, [this] { return !_queue.empty(); });
 
-  lock.lock();
+  auto msg = std::move(_queue.back());
+  _queue.clear();
+
+  return msg;
 }
 
 template <typename T>
@@ -44,6 +46,11 @@ void TrafficLight::waitForGreen() {
   // infinite while-loop
   // runs and repeatedly calls the receive function on the message queue.
   // Once it receives TrafficLightPhase::green, the method returns.
+  while (true) {
+    if (_messageQueue.receive() == TrafficLightPhase::green) {
+      return;
+    }
+  }
 }
 
 TrafficLightPhase TrafficLight::getCurrentPhase() { return _currentPhase; }
@@ -94,9 +101,8 @@ void TrafficLight::cycleThroughPhases() {
 
     if (time_since_last_update >= cycle_time) {
       toogleTrafficLight();
+      // TODO(a-ngo): send update to msg queue
     }
-
-    // send update to msg queue
 
     // reset stopwatch for the next cycle
     last_update = std::chrono::steady_clock::now();
