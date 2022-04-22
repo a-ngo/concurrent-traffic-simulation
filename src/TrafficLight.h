@@ -43,7 +43,7 @@ class TrafficLight : public TrafficObject {
  public:
   // constructor / desctructor
   TrafficLight();
-  ~TrafficLight();
+  ~TrafficLight() = default;
 
   // getters / setters
   TrafficLightPhase getCurrentPhase();
@@ -65,7 +65,7 @@ class TrafficLight : public TrafficObject {
   std::condition_variable _condition;
   std::mutex _mutex;
   TrafficLightPhase _currentPhase;
-  MessageQueue<TrafficLightPhase> _messageQueue;
+  std::shared_ptr<MessageQueue<TrafficLightPhase>> _messageQueue;
 };
 
 #endif
